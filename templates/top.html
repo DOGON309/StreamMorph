@@ -1,0 +1,34 @@
+{% extends "./components/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<script>
+  function clip() {
+    if (!navigator.clipboard) {
+      alert("現在、使用中のブラウザは対応していません")
+      return;
+    }
+
+    navigator.clipboard.writeText("http://localhost:{{ params.port }}/overlay/looptext/").then(() => {
+      alert("コピーしました")
+    }, () => {
+      alert("コピーに失敗しました")
+    });
+  }
+</script>
+<div class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+  <h2>StreamMorph</h2>
+  <div class="d-flex flex-row align-items-center justify-content-center">
+    <div class="d-flex flex-column">
+      <div class="btn-group my-3">
+        <a href="/overlay/looptext/" class="btn btn-primary">ループテキスト</a>
+        <button type="button" class="btn btn-success" onclick="clip();">コピー</button>
+      </div>
+      <a href="/overlay/looptext/edit/" class="btn btn-success my-3">ループテキスト編集</a>
+      <a href="/overlay/looptext/config/" class="btn btn-secondary my-3">ループテキスト設定</a>
+    </div>
+    <a href="/settings/" class="btn btn-secondary mx-3">設定</a>
+  </div>
+</div>
+{% endblock %}

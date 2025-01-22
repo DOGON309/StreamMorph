@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .bbs{
+            align-items: center;
+            background: {{ params.backgroundColor }};
+            color: {{ params.textColor }};
+            display: flex;
+            height: {{ params.height }}px;
+            line-height: 40px;
+            overflow:hidden;
+            width: {{ params.width }}px;
+            white-space:nowrap;
+            z-index: 1;
+        }
+        .bbc {
+            width: 100%;
+        }
+        .bbs ul {
+            animation: flowing {{ params.speed}}s linear infinite;
+            font-size: calc({{ params.height }}px / 2);
+            transform:translateX(100%);
+            margin-top: auto 0;
+            padding: 0;
+        }
+        .bbs ul li{
+            display: inline-block;
+            padding-right: 10px;
+        }
+        @keyframes flowing {
+            0% { transform:translateX(100%); }
+            100% { transform:translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bbs">
+        <div class="bbc">
+            <ul>
+                {% for item in params["items"] %}
+                <li>{{ item.content }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
