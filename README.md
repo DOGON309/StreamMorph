@@ -8,7 +8,7 @@ https://github.com/DOGON309/StreamMorph/releases
 StreamMorph-???.zipを解凍してください
 ### windows
 - 全て展開を行い
-![image](https://github.com/user-attachments/assets/9f6532b9-6fcd-4b43-947e-cc809d14acb8)
+  ![image](https://github.com/user-attachments/assets/9f6532b9-6fcd-4b43-947e-cc809d14acb8)
 
 - 解凍後のフォルダ内のmain.exeをダブルクリック（警告等が出たら詳細情報をクリックし実行してください）
   最初の起動には少し時間がかかります…
