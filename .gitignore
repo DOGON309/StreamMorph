@@ -177,3 +177,7 @@ cython_debug/
 build/
 dist/
 *.spec
+
+# config database
+*.ini
+*.db
