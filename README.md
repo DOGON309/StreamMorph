@@ -30,3 +30,8 @@ StreamMorph-???.zipを解凍してください
 - トップページの[ループテキスト設定] をクリック
 - 各プロパティの数値・色をお好みに変更する
 - [保存] をクリックすることで設定を反映できます
+
+## 開発者
+### exe化
+コマンドでpyinstallerを使用しています
+```pyinstaller -F --add-data "templates:templates" --onefile --clean main.py```
