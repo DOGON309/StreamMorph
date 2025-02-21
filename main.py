@@ -43,6 +43,10 @@ def settings():
 def overlay_list():
     config = Config()
     params = {
+        "fullscreen": config.get("LOOPTEXT", "fullscreen"),
+        "screen_width": config.get("LOOPTEXT", "screen_width"),
+        "screen_height": config.get("LOOPTEXT", "screen_height"),
+        "position": config.get("LOOPTEXT", "position"),
         "height": config.get("LOOPTEXT", "height"),
         "width": config.get("LOOPTEXT", "width"),
         "speed": config.get("LOOPTEXT", "speed"),
@@ -82,6 +86,10 @@ def overlay_config():
     if request.method == 'GET':
         config = Config()
         params = {
+            "fullscreen": config.get("LOOPTEXT", "fullscreen"),
+            "screen_width": config.get("LOOPTEXT", "screen_width"),
+            "screen_height": config.get("LOOPTEXT", "screen_height"),
+            "position": config.get("LOOPTEXT", "position"),
             "height": config.get("LOOPTEXT", "height"),
             "width": config.get("LOOPTEXT", "width"),
             "speed": config.get("LOOPTEXT", "speed"),
@@ -91,6 +99,18 @@ def overlay_config():
         return render_template('looptext_config.html', params=params)
     else: 
         config = Config()
+        if "fullscreen" in request.form:
+            # チェックがついている場合
+            config.set("LOOPTEXT", "fullscreen", "true")
+        else:
+            # チェックがついていない場合
+            config.set("LOOPTEXT", "fullscreen", "false")
+        if "screen_width" in request.form:
+            config.set("LOOPTEXT", "screen_width", str(request.form["screen_width"]))
+        if "screen_height" in request.form:
+            config.set("LOOPTEXT", "screen_height", str(request.form["screen_height"]))
+        if "position" in request.form:
+            config.set("LOOPTEXT", "position", str(request.form["position"]))
         config.set("LOOPTEXT", "height", str(request.form["height"]))
         config.set("LOOPTEXT", "width", str(request.form["width"]))
         config.set("LOOPTEXT", "speed", str(request.form["speed"]))

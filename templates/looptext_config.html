@@ -9,6 +9,28 @@
             <div class="card-header">SETTINGS</div>
             <ul class="list-group">
                 <li class="list-group-item">
+                    <label for="FullScreenToggle" class="form-check-label">FullScreen</label>
+                    <input type="checkbox" class="form-check-input" id="FullScreenToggle"
+                        value="{{ params.fullscreen }}" name="fullscreen">
+                </li>
+                <li class="list-group-item">
+                    <label for="ScreenHeightInput" class="form-label">Screen Height</label>
+                    <input type="number" class="form-control" id="ScreenHeightInput" value="{{ params.screen_height }}"
+                        name="screen_height">
+                </li>
+                <li class="list-group-item">
+                    <label for="ScreenWidthInput" class="form label">Screen Width</label>
+                    <input type="number" class="form-control" id="ScreenWidthInput" value="{{ params.screen_width }}"
+                        name="screen_width">
+                </li>
+                <li class="list-group-item">
+                    <label for="PositionInput" class="form-label">Position</label>
+                    <select class="form-select" id="PositionInput" name="position">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                    </select>
+                </li>
+                <li class="list-group-item">
                     <label for="HeightInput" class="form-label">Height</label>
                     <input type="number" class="form-control" value="{{ params.height }}" name="height">
                 </li>
@@ -22,11 +44,13 @@
                 </li>
                 <li class="list-group-item">
                     <label for="BackgroundColorInput" class="form-label">BackgroundColor</label>
-                    <input type="color" class="form-control" id="BackgroundColorInput" value="{{ params.backgroundColor }}" name="backgroundColor">
+                    <input type="color" class="form-control" id="BackgroundColorInput"
+                        value="{{ params.backgroundColor }}" name="backgroundColor">
                 </li>
                 <li class="list-group-item">
                     <label for="TextColorInput" class="form-label">TextColor</label>
-                    <input type="color" class="form-control" id="TextColorInput" value="{{ params.textColor }}" name="textColor">
+                    <input type="color" class="form-control" id="TextColorInput" value="{{ params.textColor }}"
+                        name="textColor">
                 </li>
             </ul>
         </div>
@@ -36,4 +60,47 @@
         </div>
     </form>
 </div>
+<script>
+    const fullScreenCheckBox = document.getElementById("FullScreenToggle");
+    const screenHeightInput = document.getElementById("ScreenHeightInput");
+    const screenWidth = document.getElementById("ScreenWidthInput");
+    const positionInput = document.getElementById("PositionInput");
+
+    console.log(fullScreenCheckBox);
+
+    // サイトを開いた時
+    if ("{{ params.fullscreen }}" == "true") {
+        fullScreenCheckBox.checked = true;
+        fullScreenCheckBoxTrue();
+    } else {
+        fullScreenCheckBox.checked = false;
+        fullScreenCheckBoxFalse();
+    }
+
+    if ("{{ params.position }}" == "top") {
+        positionInput.value = "top";
+    } else {
+        positionInput.value = "bottom";
+    }
+
+    fullScreenCheckBox.addEventListener("change", () => {
+        if (fullScreenCheckBox.checked) {
+            fullScreenCheckBoxTrue();
+        } else {
+            fullScreenCheckBoxFalse();
+        }
+    })
+
+    function fullScreenCheckBoxTrue() {
+        screenHeightInput.disabled = false;
+        screenWidth.disabled = false;
+        positionInput.disabled = false;
+    }
+
+    function fullScreenCheckBoxFalse() {
+        screenHeightInput.disabled = true;
+        screenWidth.disabled = true;
+        positionInput.disabled = true;
+    }
+</script>
 {% endblock %}

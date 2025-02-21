@@ -17,6 +17,10 @@ class Config:
             "port": "8080",
         },
         "LOOPTEXT": {
+            "fullscreen": "false",
+            "screen_height": "1080",
+            "screen_width": "1920",
+            "position": "top",  # top, bottom
             "height": "90",
             "width": "1920",
             "speed": "10",
