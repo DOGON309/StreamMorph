@@ -5,41 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .marquee {
-            display: flex;
-            align-items: center;
-            padding: 1em 0;
-            overflow: hidden;
-            border: 1px #ccc solid;
-            border-radius: 5px;
-            background-color: {{ params.backgroundColor }};
-            height: {{ params.height }}px;
-            width: {{ params.width }}px;
-          }   
-          .marquee-text {
-            display: inline-block;
-            padding-left: 100%;
-            white-space: nowrap;
-            animation: marquee {{ params.speed }}s linear infinite;
-            color: {{ params.textColor }};
-            font-size: calc({{ params.height }}px / 2);
-          }
-          .marquee-text span {
-            margin: 0 12px;
-          }
-          @keyframes marquee {
-            0% { transform: translate(0); }
-            100% { transform: translate(-100%); }
-          }
+      body {
+        margin: 0;
+      }
+      .marquee {
+        display: flex;
+        align-items: center;
+        padding: 1em 0;
+        overflow: hidden;
+        border: 0px #000 solid;
+        border-radius: 5px;
+        background-color: {{ params.backgroundColor }};
+        height: {{ params.height }}px;
+        width: {{ params.width }}px;
+        {% if params.fullscreen == "true" %}
+        {% if params.position == "top" %}
+        position: absolute;
+        top: 0;
+        left: 0;
+        {% endif %}
+        {% if params.position == "bottom" %}
+        position: absolute;
+        top: calc({{ params.screen_height }}px - {{ params.height }}px);
+        left: 0;
+        {% endif %}
+        {% endif %}
+      }   
+      .marquee-text {
+        display: inline-block;
+        padding-left: 100%;
+        white-space: nowrap;
+        animation: marquee {{ params.speed }}s linear infinite;
+        color: {{ params.textColor }};
+        font-size: calc({{ params.height }}px / 2);
+      }
+      .marquee-text span {
+        margin: 0 12px;
+      }
+      @keyframes marquee {
+        0% { transform: translate(0); }
+        100% { transform: translate(-100%); }
+      }
+      .fullscreen {
+        background-color: {{ params.backgroundColor }};
+        height: {{ params.screen_height}}px;
+        width: {{ params.screen_width }}px;
+      }
     </style>
 </head>
 <body>
-    <div class="marquee">
+    {% if params.fullscreen == "true" %}
+      <div class="fullscreen">
+        <div class="marquee">
+            <div class="marquee-text">
+                {% for item in params["items"] %}
+                <span>{{ item.content }}</span>
+                {% endfor %}
+            </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="marquee">
         <div class="marquee-text">
             {% for item in params["items"] %}
             <span>{{ item.content }}</span>
             {% endfor %}
         </div>
-    </div>
+      </div> 
+    {% endif %}
 </body>
 </html>
