@@ -10,6 +10,7 @@ import uuid, sys
 # UPDATE
 import requests
 import json
+from art import *
 
 UPDATE_URL = 'https://raw.githubusercontent.com/DOGON309/StreamMorph/main/version.json'
 CURRENT_VERSION = '1.1.0'
@@ -23,10 +24,15 @@ CORS(app)
 
 @app.route('/')
 def top():
+    isUpdate = 0
+    if check_for_update() is not None:
+        isUpdate = 1
     config = Config()
     params = {
-        "port": config.get("SERVER", "port")
+        "port": config.get("SERVER", "port"),
+        "isUpdate": isUpdate,
     }
+    print(params["isUpdate"])
     return render_template('top.html', params=params)
 
 @app.route('/settings/', methods=['GET', 'POST'])
@@ -125,7 +131,26 @@ def overlay_config():
         config.set("LOOPTEXT", "textColor", str(request.form["textColor"]))
         return redirect("/")
 
+def check_for_update():
+    try:
+        response = requests.get(UPDATE_URL)
+        data = response.json()
+        latest_version = data.get("version")
+
+        if latest_version > CURRENT_VERSION:
+            tprint("UPDATE")
+            print(f"新しいバージョンが利用可能です: {latest_version}")
+            return data.get("download_url")
+        else:
+            print("最新バージョンを利用しています")
+            return None
+    except Exception as e:
+        print("アップデートの確認に失敗しました")
+        print(e)
+        return None
+
 if __name__ == '__main__':
+    check_for_update()
     config = Config()
     port = config.get("SERVER", "port")
     app.run(host="localhost", port=int(port))

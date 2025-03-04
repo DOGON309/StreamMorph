@@ -1,5 +1,52 @@
 {% extends "./components/base.html" %}
 
+{% block header %}
+<style>
+  .update-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: -200px;
+    left: calc(50% - 650px/2);
+    width: 650px;
+    font-size: 12px;
+    background: #fff;
+    padding: 1.2em;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    visibility: visible;
+    transition: .5s;
+  }
+  .update-content.is-show {
+    bottom: 30px;
+  }
+  .update-text {
+    width: 90%;
+  }
+  .update-agree {
+    color: #fff;
+    background: dodgerblue;
+    padding: .5em 1.5em;
+  }
+  .update-agree:hover {
+    cursor: pointer;
+  }
+  /* メディアクエリ */
+  @media screen and (max-width: 650px) {
+    .cookie-consent {
+      flex-direction: column;
+      width: 300px;
+      left: calc(50% - 300px/2);
+    }
+    .cookie-text {
+      width: 100%;
+      margin-bottom: 1em;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
@@ -31,4 +78,14 @@
     <a href="/settings/" class="btn btn-secondary mx-3">設定</a>
   </div>
 </div>
+<div class="update-content">
+  <div class="update-text">新しいバージョンが利用可能です</div>
+  <div class="update-agree">OK</div>
+<script>
+  let cc = document.querySelector('.update-content');
+  if ({{ params.isUpdate }} == 1) {
+    console.log(cc);
+    cc.classList.add('is-show')
+  }
+</script>
 {% endblock %}
