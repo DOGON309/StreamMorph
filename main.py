@@ -7,6 +7,13 @@ from databse import Database
 
 import uuid, sys
 
+# UPDATE
+import requests
+import json
+
+UPDATE_URL = 'https://raw.githubusercontent.com/DOGON309/StreamMorph/main/version.json'
+CURRENT_VERSION = '1.1.0'
+
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.'
 TEMPLATES_PATH = ROUTE_PATH + '/templates'
 
