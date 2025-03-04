@@ -9,6 +9,7 @@ import uuid, sys
 
 # UPDATE
 import requests
+import os, shutil
 import json
 from art import *
 
@@ -131,6 +132,15 @@ def overlay_config():
         config.set("LOOPTEXT", "textColor", str(request.form["textColor"]))
         return redirect("/")
 
+@app.route('/update/', methods=['POST'])
+def update():
+    update_url = check_for_update()
+    if update_url:
+        download_update(update_url)
+        apply_update()
+        return redirect("/")
+    return "アップデートはありません"
+
 def check_for_update():
     try:
         response = requests.get(UPDATE_URL)
@@ -148,6 +158,23 @@ def check_for_update():
         print("アップデートの確認に失敗しました")
         print(e)
         return None
+    
+def download_update(url, save_path="update.exe"):
+    response = requests.get(url, stream=True)
+    with open(save_path, "wb") as file:
+        for chunk in response.iter_content(chunk_size=8192):
+            file.write(chunk)
+    print("アップデートをダウンロードしました")
+
+def apply_update():
+    new_exe = "update.exe"
+    current_exe = "main.exe"
+
+    if os.path.exists(new_exe):
+        shutil.move(new_exe, current_exe)
+        print("アップデートを適用しました")
+        os.system(current_exe)
+        sys.exit()
 
 if __name__ == '__main__':
     check_for_update()
