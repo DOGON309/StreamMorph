@@ -74,9 +74,16 @@
         <button class="btn">起動</button>
         <button class="btn">設定</button>
     </div>
-    <p class="url-text" id="copy-text">http://localhost:8080</p>
+    <p class="url-text" id="copy-text"></p>
 
     <script>
+        // preload.jsで公開したAPIからデータの取得
+        window.electronAPI.onInitData((data) => {
+            console.log('Received data:', data);
+            // 描写
+            document.getElementById("copy-text").textContent = 'http://localhost:' + data.port;
+        })
+
         // 「http://localhost:8080」のテキストをクリックするとクリップボードにコピーする
         const copyText = document.getElementById("copy-text");
 

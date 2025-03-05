@@ -1,20 +1,30 @@
 const { app, BrowserWindow, shell } = require('electron')
+const path = require('path')
+
+const CURRENT_VERSION = '1.0.0'
 
 const createWindow = () => {
-    const win = new BrowserWindow({
+    const mainWindow = new BrowserWindow({
         width: 800,
-        height: 600
-    })
+        height: 600,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
+    });
 
-    win.loadFile('index.html')
+    mainWindow.loadFile('index.html')
 
-    win.webContents.setWindowOpenHandler(({ url }) => {
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('initData', { 'port': '8000' });
+    });
+
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         console.log(url)
         if (url.startsWith('http')) {
             shell.openExternal(url)
         }
         return { action: 'deny' }
-    })
+    });
 }
 
 app.whenReady().then(() => {
