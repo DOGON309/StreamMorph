@@ -1,18 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-    <title>Hello from Electron renderer!</title>
+    <meta charset="UTF-8">
+    <title>StreamMorph</title>
+    <style>
+        /* 全体のスタイル */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+            /* 画面中央寄せのためフレックスボックスを使用 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f8f8f8;
+            /* 背景色はお好みで */
+        }
+
+        /* タイトルのスタイル */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ボタンのコンテナ（2つのボタンを横並びに配置） */
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            /* ボタン間の隙間 */
+            margin-bottom: 1.5rem;
+        }
+
+        /* ボタンのスタイル */
+        .btn {
+            background-color: #40c4ff;
+            /* お好みの色に変更可能 */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #00b0ff;
+            /* ホバー時の色 */
+        }
+
+        /* クリックしてコピー可能なテキスト */
+        .url-text {
+            font-size: 1rem;
+            color: #555;
+            cursor: pointer;
+            /* クリック可能なことを示す */
+        }
+
+        /* ホバー時の下線 */
+        .url-text:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Hello from Electron renderer!</h1>
-    <a href="https://github.com/electron/electron-quick-start" target="_blank">ここをクリック！！</a>
-    <p>👋</p>
+    <h1>StreamMorph</h1>
+    <div class="button-container">
+        <button class="btn">起動</button>
+        <button class="btn">設定</button>
+    </div>
+    <p class="url-text" id="copy-text">http://localhost:8080</p>
+
+    <script>
+        // 「http://localhost:8080」のテキストをクリックするとクリップボードにコピーする
+        const copyText = document.getElementById("copy-text");
+
+        copyText.addEventListener("click", function () {
+            // クリップボードにコピー
+            navigator.clipboard.writeText(copyText.textContent)
+                .then(() => {
+                    alert("クリップボードにコピーしました！");
+                })
+                .catch(err => {
+                    console.error("コピーに失敗しました: ", err);
+                });
+        });
+    </script>
 </body>
 
 </html>
