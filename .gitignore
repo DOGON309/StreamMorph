@@ -181,3 +181,6 @@ dist/
 # config database
 *.ini
 *.db
+
+# mac
+.DS_Store
