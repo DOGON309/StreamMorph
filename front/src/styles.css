@@ -40,6 +40,11 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
+.btn:disabled {
+    background-color: #ccc;
+    /* ボタンが無効の場合の色 */
+}
+
 .btn:hover {
     background-color: #00b0ff;
     /* ホバー時の色 */

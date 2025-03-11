@@ -7,9 +7,9 @@
   "type": "commonjs",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build": "electron-packager . --overwrite"
+    "build": "electron-packager . --overwrite",
+    "test": "webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",

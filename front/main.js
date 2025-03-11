@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
-const { spawn, exec } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const Config = require('./config.js');
 
 const CURRENT_VERSION = '1.0.0';
@@ -16,7 +16,6 @@ function startExeProcess() {
 
     const exePath = path.join(__dirname, 'main.exe');
 
-    // Windows環境で実行する場合
     exeProcess = spawn(exePath, [], { shell: true });
 
     console.log(`Exe started with PID: ${exeProcess.pid}`);
@@ -44,15 +43,15 @@ function stopExeProcess() {
     if (exeProcess && exeProcess.pid) {
         console.log(`Stopping exe process with PID: ${exeProcess.pid}`);
 
-        // Windows の場合、taskkill を使用
-        const killCommand = `taskkill /PID ${exeProcess.pid} /T /F`;
-        exec(killCommand, (err, stdout, stderr) => {
-            if (err) {
-                console.error(`Failed to kill process: ${stderr}`);
-                return;
-            }
-            exeProcess = null;
-        });
+        try {
+            // 同期処理で `taskkill` を実行（Electron が終了する前に完了させる）
+            execSync(`taskkill /PID ${exeProcess.pid} /T /F`, { stdio: 'inherit' });
+            console.log(`Exe process (PID: ${exeProcess.pid}) has been terminated`);
+        } catch (err) {
+            console.error(`Failed to kill process: ${err}`);
+        }
+
+        exeProcess = null;
     } else {
         console.log('Exe process is not running');
     }
@@ -92,7 +91,18 @@ const createWindow = () => {
         }
         return { action: 'deny' };
     });
+
+    // ウィンドウを閉じる際にプロセスを停止
+    mainWindow.on('close', (event) => {
+        stopExeProcess();
+    });
 };
+
+// アプリが終了する前に `stopExeProcess()` を実行
+app.on('before-quit', () => {
+    console.log('App is quitting, stopping exe process...');
+    stopExeProcess();
+});
 
 app.whenReady().then(() => {
     createWindow();
