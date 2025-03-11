@@ -1,10 +1,10 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron')
-const path = require('path')
-const { spawn } = require('child_process')
-const Config = require('./config.js')
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const path = require('path');
+const { spawn, exec } = require('child_process');
+const Config = require('./config.js');
 
-const CURRENT_VERSION = '1.0.0'
-const config = new Config()
+const CURRENT_VERSION = '1.0.0';
+const config = new Config();
 
 let exeProcess = null;
 
@@ -16,12 +16,13 @@ function startExeProcess() {
 
     const exePath = path.join(__dirname, 'main.exe');
 
-    // shell オプションをtrueにすることで、windows環境でもexeファイルを実行できる
+    // Windows環境で実行する場合
     exeProcess = spawn(exePath, [], { shell: true });
+
+    console.log(`Exe started with PID: ${exeProcess.pid}`);
 
     exeProcess.stdout.on('data', (data) => {
         console.log(`Exe stdout: ${data}`);
-
     });
 
     exeProcess.stderr.on('data', (data) => {
@@ -32,12 +33,28 @@ function startExeProcess() {
         console.log(`Exe process exited with code ${code}`);
         exeProcess = null;
     });
+
+    exeProcess.on('error', (err) => {
+        console.log(`Failed to start exe process: ${err}`);
+        exeProcess = null;
+    });
 }
 
 function stopExeProcess() {
-    if (exeProcess) {
-        exeProcess.kill();
-        exeProcess = null;
+    if (exeProcess && exeProcess.pid) {
+        console.log(`Stopping exe process with PID: ${exeProcess.pid}`);
+
+        // Windows の場合、taskkill を使用
+        const killCommand = `taskkill /PID ${exeProcess.pid} /T /F`;
+        exec(killCommand, (err, stdout, stderr) => {
+            if (err) {
+                console.error(`Failed to kill process: ${stderr}`);
+                return;
+            }
+            exeProcess = null;
+        });
+    } else {
+        console.log('Exe process is not running');
     }
 }
 
@@ -50,10 +67,7 @@ const createWindow = () => {
         }
     });
 
-    // devtools
-    mainWindow.webContents.openDevTools();
-
-    mainWindow.loadFile('dist/index.html')
+    mainWindow.loadFile('dist/index.html');
 
     mainWindow.webContents.on('did-finish-load', () => {
         let username = config.get("GENERAL", "username");
@@ -61,27 +75,25 @@ const createWindow = () => {
         mainWindow.webContents.send('initData', { 'username': username.toString(), 'port': port.toString() });
     });
 
-    // 起動ボタンクリック時の処理
     ipcMain.on('start-button-clicked', () => {
-        console.log('起動ボタンクリック')
-        startExeProcess()
-    })
+        console.log('起動ボタンクリック');
+        startExeProcess();
+    });
 
-    // 停止ボタンクリック時の処理
     ipcMain.on('stop-button-clicked', () => {
-        console.log('停止ボタンクリック')
-        stopExeProcess()
-    })
+        console.log('停止ボタンクリック');
+        stopExeProcess();
+    });
 
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        console.log(url)
+        console.log(url);
         if (url.startsWith('http')) {
-            shell.openExternal(url)
+            shell.openExternal(url);
         }
-        return { action: 'deny' }
+        return { action: 'deny' };
     });
-}
+};
 
 app.whenReady().then(() => {
-    createWindow()
-})
+    createWindow();
+});

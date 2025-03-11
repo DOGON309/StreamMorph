@@ -184,3 +184,8 @@ dist/
 
 # mac
 .DS_Store
+
+# exe
+*.exe
+front/streammorph-win32-x64/
+front/streammorph-win32-x64.zip
