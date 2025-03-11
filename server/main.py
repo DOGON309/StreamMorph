@@ -1,11 +1,14 @@
 from flask import Flask, render_template, redirect, request
 from flask_cors import CORS
+import argparse
 from config import Config
 from looptext import LoopText
 
 from databse import Database
 
 import uuid, sys
+
+CURRENT_VERSION = "1.1.0"
 
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.'
 TEMPLATES_PATH = ROUTE_PATH + '/templates'
@@ -119,6 +122,12 @@ def overlay_config():
         return redirect("/")
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--version', help='show version', action='store_true')
+    args = parser.parse_args()
+    if args.version:
+        print(CURRENT_VERSION)
+        sys.exit(0)
     config = Config()
     port = config.get("SERVER", "port")
     app.run(host="localhost", port=int(port))
