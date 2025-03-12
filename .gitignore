@@ -192,3 +192,5 @@ front/streammorph-win32-x64.zip
 
 # なんでか間違えるので保険
 node_modules/
+package.json
+package-lock.json
