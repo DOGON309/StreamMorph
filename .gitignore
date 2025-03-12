@@ -184,11 +184,16 @@ dist/
 
 # mac
 .DS_Store
+front/streammorph-darwin-arm64
 
-# exe
+# windows
 *.exe
 front/streammorph-win32-x64/
 front/streammorph-win32-x64.zip
+
+# プッシュ軽量化
+front/node_modules
+front/package-lock.json
 
 # なんでか間違えるので保険
 node_modules/
